@@ -1,0 +1,42 @@
+# One command: docker compose up --build
+# Then seed demo data:  docker compose exec api python -m scripts.seed
+# Override any value by copying .env.example to .env (compose reads it automatically).
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: widgets
+      POSTGRES_PASSWORD: widgets
+      POSTGRES_DB: widgets
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U widgets"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    volumes: [pgdata:/var/lib/postgresql/data]
+
+  api:
+    build: .
+    depends_on:
+      db: { condition: service_healthy }
+    ports: ["8000:8000"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://widgets:widgets@db:5432/widgets
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:8000}
+      ADMIN_CORS_ORIGINS: ${ADMIN_CORS_ORIGINS:-http://localhost:5500,http://127.0.0.1:5500}
+      SECRET_KEY: ${SECRET_KEY:-dev-only-change-me}
+      GEO_MODE: ${GEO_MODE:-mock}
+      DEBUG_ENDPOINTS: ${DEBUG_ENDPOINTS:-1}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+
+  # The "customer site": plain HTML on a second origin (http://localhost:5500).
+  customer-site:
+    image: python:3.12-slim
+    working_dir: /site
+    command: python -m http.server 5500
+    volumes: ["./demo:/site:ro"]
+    ports: ["5500:5500"]
+
+volumes:
+  pgdata:
