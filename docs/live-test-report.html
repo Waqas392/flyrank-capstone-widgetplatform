@@ -1,0 +1,217 @@
+<!doctype html><meta charset=utf-8><title>Live test report</title>
+<style>body{font:14px/1.45 system-ui,sans-serif;max-width:1100px;margin:24px auto;padding:0 16px;color:#1a1a1a}table{border-collapse:collapse;width:100%;margin-bottom:22px}td,th{border:1px solid #ddd;padding:6px 8px;text-align:left;vertical-align:top}th{background:#f4f4f8}.b{display:inline-block;padding:2px 8px;border-radius:10px;color:#fff;font-weight:700;font-size:12px}.big{display:flex;gap:12px;margin:14px 0}.big div{padding:12px 20px;border-radius:8px;color:#fff;font-size:22px;font-weight:700}small{display:block;font-weight:400;font-size:12px}</style>
+<h1>Live test report</h1><p>2026-11-03 12:34:15 &middot; target <code>http://api:8000</code> &middot; origin <code>http://localhost:5500</code> &middot; 122s</p>
+<div class=big><div style='background:#0a7d33'>182<small>passed</small></div><div style='background:#b00020'>0<small>failed</small></div><div style='background:#8a6d00'>1<small>skipped</small></div></div>
+<h2>01 - Connectivity</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /healthz -&gt; 200 {status: ok}</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /docs and /openapi.json are served</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Customer site and API are on different origins (so every call crosses CORS)</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Customer site index.html contains one &lt;script&gt; embed line per demo widget</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Customer site serves dashboard.html</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /widgets/&lt;seeded demo id&gt;/config -&gt; 200 (seed was run)  [demo-signup]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /widgets/&lt;seeded demo id&gt;/config -&gt; 200 (seed was run)  [demo-contact]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /widgets/&lt;seeded demo id&gt;/config -&gt; 200 (seed was run)  [demo-popover]</td><td></td></tr>
+</table>
+<h2>02 - Auth</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/auth/login unknown email -&gt; 401 invalid_credentials</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/auth/login right email + wrong password -&gt; same 401 (no user enumeration)</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/auth/login valid demo credentials -&gt; 200 + token that works</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/auth/login invalid email / short password -&gt; 422 JSON</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/auth/register existing email -&gt; 409 email_taken</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Owner/dashboard endpoints reject requests without a token (401)  [GET-/api/widgets]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Owner/dashboard endpoints reject requests without a token (401)  [POST-/api/widgets]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Owner/dashboard endpoints reject requests without a token (401)  [GET-/api/widgets/abc]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Owner/dashboard endpoints reject requests without a token (401)  [PATCH-/api/widgets/abc]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Owner/dashboard endpoints reject requests without a token (401)  [DELETE-/api/widgets/abc]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Owner/dashboard endpoints reject requests without a token (401)  [GET-/api/widgets/abc/embed]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Owner/dashboard endpoints reject requests without a token (401)  [GET-/api/dashboard/submissions]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Owner/dashboard endpoints reject requests without a token (401)  [GET-/api/dashboard/submissions/abc]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Owner/dashboard endpoints reject requests without a token (401)  [GET-/api/dashboard/stats]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/widgets with invalid Authorization header -&gt; 401  [Bearer not-a-real-token]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/widgets with invalid Authorization header -&gt; 401  [Basic dXNlcjpwYXNz]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/widgets with invalid Authorization header -&gt; 401  [Bearer]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/widgets with invalid Authorization header -&gt; 401  [fw_garbage]</td><td></td></tr>
+</table>
+<h2>03 - Widget Crud</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets -&gt; 201 with id, default fields, embed snippet</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Created widget carries a one-line &lt;script src=.../widget.js?id=...&gt; snippet</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/widgets/{id}/embed -&gt; same snippet</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/widgets lists it; GET /api/widgets/{id} returns it</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Custom field definitions are stored and returned unchanged</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>PATCH /api/widgets/{id} -&gt; 200, change persisted, version incremented</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>DELETE /api/widgets/{id} -&gt; 204, then GET -&gt; 404 and public config -&gt; 404</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [bad type-body0]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [empty title-body1]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [title too long-body2]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [missing title-body3]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [unknown property-body4]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [duplicate field names-body5]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [bad field name-body6]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [bad field type-body7]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [zero fields-body8]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [21 fields-body9]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [field named like honeypot-body10]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets invalid body -&gt; 422 JSON error  [popover delay too big-body11]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>PATCH /api/widgets/{id} invalid body -&gt; 422 JSON error</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /api/widgets with broken JSON -&gt; 4xx, never 500</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET/PATCH/DELETE on a non-existent widget -&gt; 404</td><td></td></tr>
+</table>
+<h2>04 - Tenant Isolation</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>B: GET/PATCH/DELETE/embed on A&#x27;s widget -&gt; 404 (and A&#x27;s widget is untouched)</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>B: GET /api/widgets never lists A&#x27;s widgets</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>B: dashboard list/detail/stats cannot reach A&#x27;s submissions</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>DELETE widget cascades: its submissions are gone too</td><td></td></tr>
+</table>
+<h2>05 - Delivery And Caching</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /widget.js -&gt; 200 JavaScript with Cache-Control max-age + ETag</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /widget.js with If-None-Match -&gt; 304 Not Modified</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Loader points at /assets/widget.&lt;hash&gt;.js, served immutable for 1 year</td><td></td></tr>
+<tr><td><span class=b style='background:#8a6d00'>SKIP</span></td><td>GET /assets/&lt;bundle&gt; with If-None-Match -&gt; 304 (nice-to-have; not a brief requirement)</td><td>KNOWN GAP (low severity): /assets/&lt;bundle&gt; ignores If-None-Match and always returns 200. Harmless today because the bundle is &#x27;immutable, max-age=1y&#x27; so browsers never revalidate it.</td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /assets/&lt;unknown or ../ path&gt; -&gt; 404 JSON, never a file from disk</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /widgets/{id}/config -&gt; 200 JSON, Cache-Control max-age, ETag, payload &lt; 5 KB</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /widgets/{id}/config with If-None-Match -&gt; 304</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Public config exposes no owner info, tokens or hashes</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Editing a widget changes config content + ETag (cache busts on change)</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>is_active=false -&gt; public config 404; re-activating restores it</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /widgets/&lt;missing&gt;/config -&gt; 404 JSON error</td><td></td></tr>
+</table>
+<h2>06 - Cors</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>OPTIONS /submissions (preflight) -&gt; 204 + Allow-Origin/Methods/Headers</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>OPTIONS /submissions from a random third-party site -&gt; allowed (any site may embed)</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Preflight allow-list does not blindly echo arbitrary request headers</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions response carries Access-Control-Allow-Origin</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>422 and 404 errors carry CORS headers too (so the widget JS can read the message)</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET config + widget.js + bundle carry Access-Control-Allow-Origin</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>OPTIONS /api/widgets from an unlisted origin -&gt; refused, no Allow-Origin</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>OPTIONS /api/widgets from the allow-listed dashboard origin -&gt; 204 echoing that origin</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Authenticated /api/* response: ACAO is the exact allowed origin, never &#x27;*&#x27;, absent for evil origin</td><td></td></tr>
+</table>
+<h2>07 - Submission Validation</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions valid -&gt; 201 {ok,id}; visible via dashboard API linked to the right widget</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions broken JSON -&gt; 400 invalid_json</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions invalid UTF-8 bytes -&gt; 400 JSON</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions JSON that is not an object -&gt; 400  [[]]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions JSON that is not an object -&gt; 400  [null]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions JSON that is not an object -&gt; 400  [123]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions JSON that is not an object -&gt; 400  [&quot;text&quot;]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions JSON that is not an object -&gt; 400  [true]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions 60 KB body (Content-Length) -&gt; 413 payload_too_large JSON</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions 60 KB streamed WITHOUT Content-Length -&gt; 413 (limit enforced while reading)</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions without widget_id -&gt; 422</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with malformed widget_id -&gt; 422  [123]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with malformed widget_id -&gt; 422  [None]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with malformed widget_id -&gt; 422  [wid2]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with malformed widget_id -&gt; 422  [has spaces]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with malformed widget_id -&gt; 422  [../../etc]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with malformed widget_id -&gt; 422  [xxxxxxxxxxxxxxxxx]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions for a widget that doesn&#x27;t exist -&gt; 404 widget_not_found</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions to a deactivated widget -&gt; 404</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with data not an object -&gt; 422  [None]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with data not an object -&gt; 422  [data1]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with data not an object -&gt; 422  [string]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with data not an object -&gt; 422  [5]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with data not an object -&gt; 422  [data4]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with required fields missing -&gt; 422 with per-field details</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions whitespace-only required value -&gt; 422</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions invalid email -&gt; 422  [not-an-email]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions invalid email -&gt; 422  [a@]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions invalid email -&gt; 422  [@b.com]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions invalid email -&gt; 422  [a b@c.com]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions invalid email -&gt; 422  [a@b]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions invalid email -&gt; 422  [email5]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with a field the widget doesn&#x27;t define -&gt; 422</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions value over the field&#x27;s max_length -&gt; 422</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions string field given non-string -&gt; 422  [12345]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions string field given non-string -&gt; 422  [True]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions string field given non-string -&gt; 422  [bad2]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions string field given non-string -&gt; 422  [bad3]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with &gt;40 data keys -&gt; 422</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Widget with tel + required checkbox: bad phone / unticked / string-bool -&gt; 422; good -&gt; 201</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Optional fields can be left out -&gt; 201</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions with a 129-char Idempotency-Key -&gt; 422</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>XSS / SQL-injection strings are stored verbatim as data (no 500, no execution)</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>NUL / control characters in values don&#x27;t crash storage (-&gt; 201, cleaned)</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions fuzz battery -&gt; always a 4xx JSON error, never 5xx  [fuzz0]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions fuzz battery -&gt; always a 4xx JSON error, never 5xx  [fuzz1]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions fuzz battery -&gt; always a 4xx JSON error, never 5xx  [fuzz2]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions fuzz battery -&gt; always a 4xx JSON error, never 5xx  [fuzz3]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions fuzz battery -&gt; always a 4xx JSON error, never 5xx  [fuzz4]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions fuzz battery -&gt; always a 4xx JSON error, never 5xx  [fuzz5]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions fuzz battery -&gt; always a 4xx JSON error, never 5xx  [fuzz6]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions fuzz battery -&gt; always a 4xx JSON error, never 5xx  [fuzz7]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions fuzz battery -&gt; always a 4xx JSON error, never 5xx  [fuzz8]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /submissions fuzz battery -&gt; always a 4xx JSON error, never 5xx  [fuzz9]</td><td></td></tr>
+</table>
+<h2>08 - Spam Protection</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Filled honeypot field -&gt; not stored, counted as spam, bot still sees a normal-looking response</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Honeypot hit gets no message mentioning &#x27;honeypot&#x27;/&#x27;spam&#x27;/the field name</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Bot putting the honeypot value outside &#x27;data&#x27; is also dropped</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>elapsed_ms=50 (faster than a human) -&gt; not stored, counted</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>elapsed_ms=8000 (human) -&gt; stored normally</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Message with 5 URLs -&gt; not stored, counted</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>A message with a single URL is not treated as spam</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Widget with its own honeypot_field name: filling it is caught</td><td></td></tr>
+</table>
+<h2>09 - Idempotency</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Two POSTs with the same Idempotency-Key -&gt; 201 then 200 duplicate, same id, one row</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Different Idempotency-Keys -&gt; two rows</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>The same key used on two different widgets is not treated as a duplicate</td><td></td></tr>
+</table>
+<h2>10 - Geo Fallback</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Both providers up -&gt; submission enriched by provider A</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Provider A down -&gt; 201 and enriched by provider B</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Providers A+B down -&gt; still 201, stored, geo fields empty</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Provider B down (A up) -&gt; A still answers</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>After the outage ends, enrichment resumes</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Stats: geo_enriched counts only the submissions that got geo</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>POST /_debug/faults with unknown provider -&gt; 422 (no 500)</td><td></td></tr>
+</table>
+<h2>11 - Side Effects</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Email forced to fail -&gt; submission still 201 and stored</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>A healthy submission returns quickly (email is queued, not sent inline)</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Failing job is retried with backoff and completes once email works again</td><td></td></tr>
+</table>
+<h2>12 - Dashboard</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/submissions?widget_id= -&gt; exactly this widget&#x27;s 3 rows, total=3</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>limit/offset paginate and total stays 3</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Submissions are ordered newest first</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/submissions invalid query params -&gt; 422  [params0]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/submissions invalid query params -&gt; 422  [params1]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/submissions invalid query params -&gt; 422  [params2]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/submissions invalid query params -&gt; 422  [params3]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/submissions invalid query params -&gt; 422  [params4]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/submissions/{id} -&gt; row, without raw IP / hash</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/submissions/&lt;unknown&gt; -&gt; 404 submission_not_found</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/stats?widget_id= -&gt; totals, per_widget, by_day (30 days), by_country all consistent</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/stats?days=7 -&gt; 7-point series</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/stats with out-of-range days -&gt; 422  [params0]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/stats with out-of-range days -&gt; 422  [params1]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /api/dashboard/stats?widget_id=&lt;unknown&gt; -&gt; 404</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Unfiltered stats list every widget the owner has (even with zero submissions)</td><td></td></tr>
+</table>
+<h2>13 - Robustness</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET odd/hostile URLs -&gt; 4xx, never 5xx  [/nope]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET odd/hostile URLs -&gt; 4xx, never 5xx  [/api/nope]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET odd/hostile URLs -&gt; 4xx, never 5xx  [/widgets/%00/config]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET odd/hostile URLs -&gt; 4xx, never 5xx  [/widgets/..%2f..%2fetc%2fpasswd/config]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET odd/hostile URLs -&gt; 4xx, never 5xx  [path4]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET odd/hostile URLs -&gt; 4xx, never 5xx  [/assets/]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET odd/hostile URLs -&gt; 4xx, never 5xx  [/submissions/123]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Unknown route -&gt; JSON 404 error envelope</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Wrong method on /submissions -&gt; JSON 405 error envelope</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Error bodies contain no Python tracebacks / file paths</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Responses carry X-Content-Type-Options: nosniff</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>GET /healthz still 200 after the fuzzing above</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Authenticated routes given a NUL byte in an id -&gt; 404/422, never 500 (Postgres rejects NUL)  [/api/widgets/%00]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Authenticated routes given a NUL byte in an id -&gt; 404/422, never 500 (Postgres rejects NUL)  [/api/widgets/%00/embed]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Authenticated routes given a NUL byte in an id -&gt; 404/422, never 500 (Postgres rejects NUL)  [/api/dashboard/submissions/%00]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Authenticated routes given a NUL byte in an id -&gt; 404/422, never 500 (Postgres rejects NUL)  [/api/dashboard/submissions?widget_id=%00]</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>Authenticated routes given a NUL byte in an id -&gt; 404/422, never 500 (Postgres rejects NUL)  [/api/dashboard/stats?widget_id=%00]</td><td></td></tr>
+</table>
+<h2>90 - Rate Limiting</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>40 rapid POSTs -&gt; some 429 (with Retry-After + JSON + CORS), config/health stay 200, normal request works afterwards</td><td></td></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>A flood of INVALID requests is rate limited too (can&#x27;t hammer validation for free)</td><td></td></tr>
+</table>
+<h2>99 - Auth Bruteforce</h2><table><tr><th width=70>Result</th><th>Check</th><th>Detail</th></tr>
+<tr><td><span class=b style='background:#0a7d33'>PASS</span></td><td>10 wrong-password logins in a row -&gt; 429 with Retry-After appears</td><td></td></tr>
+</table>

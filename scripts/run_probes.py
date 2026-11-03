@@ -95,15 +95,19 @@ def main():
     check("both down -> stored without geo", res["A+B down"].status_code == 201 and items["A+B down"]["geo_provider"] is None)
 
     line("\nPROBE 5 - failing email side effect does not block the submission")
+    jobs_before = c.get(f"{base}/healthz").json()["jobs"]
+    total_before = sum(jobs_before.values())
     c.post(f"{base}/_debug/faults", json={"email_fail": True})
     r = post(c, base, data={**GOOD, "name": "email-down"})
     line(f"  POST with email forced to fail -> {r.status_code} {r.text}")
-    drained = c.post(f"{base}/_debug/drain-jobs").json()
-    line(f"  worker drain -> {drained}; /healthz jobs={c.get(f'{base}/healthz').json()['jobs']}")
+    jobs_after = c.get(f"{base}/healthz").json()["jobs"]
+    total_after = sum(jobs_after.values())
+    line(f"  outbox jobs before={total_before}, after={total_after}; statuses={jobs_after}")
     stored = any(i["id"] == r.json()["id"] for i in c.get(f"{base}/api/dashboard/submissions?widget_id=demo-contact&limit=20", headers=auth).json()["items"])
     c.post(f"{base}/_debug/faults", json={"email_fail": False})
     check("submission returned 201", r.status_code == 201)
     check("submission stored despite email failure", stored)
+    check("outbox job created without blocking request", total_after == total_before + 1)
 
     line("\nPROBE 6 - honeypot filled like a bot")
     time.sleep(1)

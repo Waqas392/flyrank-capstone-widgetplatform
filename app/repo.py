@@ -10,6 +10,11 @@ from .db import utcnow
 from .models import ApiToken, Job, Owner, SpamEvent, Submission, Widget
 
 
+def _unsafe(value: str) -> bool:
+    """Postgres rejects NUL (0x00) in string parameters (-> driver error -> 500). No real id contains one."""
+    return "\x00" in value
+
+
 # ---------- owners / tokens ----------
 def get_owner_by_email(s: Session, email: str) -> Owner | None:
     return s.scalar(select(Owner).where(Owner.email == email.lower()))
@@ -29,10 +34,14 @@ def list_widgets(s: Session, owner_id: str) -> list[Widget]:
 
 
 def get_widget_for_owner(s: Session, owner_id: str, widget_id: str) -> Widget | None:
+    if _unsafe(widget_id):
+        return None
     return s.scalar(select(Widget).where(Widget.id == widget_id, Widget.owner_id == owner_id))
 
 
 def get_widget_public(s: Session, widget_id: str) -> Widget | None:
+    if _unsafe(widget_id):
+        return None
     return s.scalar(select(Widget).where(Widget.id == widget_id, Widget.is_active.is_(True)))
 
 
@@ -62,6 +71,8 @@ def list_submissions(s: Session, owner_id, widget_id, since, until, limit, offse
 
 
 def get_submission_for_owner(s: Session, owner_id: str, sub_id: str) -> Submission | None:
+    if _unsafe(sub_id):
+        return None
     return s.scalar(select(Submission).where(Submission.id == sub_id, Submission.owner_id == owner_id))
 
 

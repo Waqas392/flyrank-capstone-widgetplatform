@@ -28,14 +28,29 @@ docker compose exec api python -m scripts.seed         # demo owner + 3 widgets;
 # open http://localhost:5500  -> widgets rendered from another origin
 # open http://localhost:5500/dashboard.html  -> owner dashboard (demo@example.com / demo-password-123)
 ```
-Without Docker (SQLite):
+Without Docker (SQLite), macOS/Linux:
 ```bash
 python -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
 cp .env.example .env && set -a && . ./.env && set +a
 uvicorn app.main:app_factory --factory --port 8000 &
-python -m http.server 5500 --directory demo &          # the second origin
+python -m http.server 5500 --directory demo &
 python -m scripts.seed
 ```
+
+Without Docker (SQLite), Windows PowerShell (run each line in the project folder):
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+$env:DATABASE_URL = "sqlite:///./data/app.db"
+$env:SECRET_KEY = "replace-with-a-long-random-secret"
+$env:DEBUG_ENDPOINTS = "1"
+$env:GEO_MODE = "mock"
+Start-Process -NoNewWindow python -ArgumentList "-m","uvicorn","app.main:app_factory","--factory","--port","8000"
+Start-Process -NoNewWindow python -ArgumentList "-m","http.server","5500","--directory","demo"
+python -m scripts.seed
+```
+Open `http://localhost:5500`. The API is at `http://localhost:8000`. Keep the two server processes running while testing.
 Tests (no Docker/network; SQLite + mock geo): `python -m pytest -q` · Acceptance probes against a live server: `python -m scripts.run_probes`
 
 ## API
