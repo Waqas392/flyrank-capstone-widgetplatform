@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Owner dashboard</title>
+  <style>
+    body{font:15px/1.4 system-ui,sans-serif;max-width:960px;margin:30px auto;padding:0 16px}
+    input,button{font:inherit;padding:6px 8px}table{border-collapse:collapse;width:100%;margin-top:12px}
+    th,td{border:1px solid #ddd;padding:6px 8px;text-align:left;font-size:13px}th{background:#f5f5fa}
+    .tiles{display:flex;gap:12px;margin:12px 0}.tile{border:1px solid #ddd;border-radius:8px;padding:10px 16px}
+    .tile b{display:block;font-size:22px}.err{color:#b00020}
+  </style>
+</head>
+<body>
+  <h1>Dashboard</h1>
+  <p>API: <input id="api" value="http://localhost:8000" size="24">
+     Email: <input id="email" value="demo@example.com">
+     Password: <input id="pw" type="password" value="demo-password-123">
+     <button id="go">Load</button> <span id="err" class="err"></span></p>
+  <div class="tiles" id="tiles"></div>
+  <h3>Submissions per widget</h3><table id="pw-table"></table>
+  <h3>Country breakdown</h3><table id="geo-table"></table>
+  <h3>Latest submissions</h3><table id="subs"></table>
+<script>
+function cell(tag, text){ var c=document.createElement(tag); c.textContent=text; return c; }
+function fill(id, head, rows){
+  var t=document.getElementById(id); t.replaceChildren();
+  var tr=document.createElement("tr"); head.forEach(function(h){tr.appendChild(cell("th",h));}); t.appendChild(tr);
+  rows.forEach(function(r){var tr=document.createElement("tr"); r.forEach(function(v){tr.appendChild(cell("td",v==null?"":String(v)));}); t.appendChild(tr);});
+}
+document.getElementById("go").onclick = async function(){
+  var api=document.getElementById("api").value.replace(/\/$/,""), err=document.getElementById("err"); err.textContent="";
+  try{
+    var lr=await fetch(api+"/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({email:document.getElementById("email").value,password:document.getElementById("pw").value})});
+    if(!lr.ok) throw new Error("login failed ("+lr.status+")");
+    var h={Authorization:"Bearer "+(await lr.json()).token};
+    var st=await (await fetch(api+"/api/dashboard/stats?days=30",{headers:h})).json();
+    var subs=await (await fetch(api+"/api/dashboard/submissions?limit=25",{headers:h})).json();
+    var tiles=document.getElementById("tiles"); tiles.replaceChildren();
+    [["Submissions",st.totals.submissions],["Geo-enriched",st.totals.geo_enriched],["Spam blocked",st.totals.spam_blocked]].forEach(function(p){
+      var d=document.createElement("div"); d.className="tile"; var b=document.createElement("b"); b.textContent=p[1]; d.appendChild(b); d.appendChild(document.createTextNode(p[0])); tiles.appendChild(d);});
+    fill("pw-table",["Widget","Title","Submissions (30d)"],st.per_widget.map(function(w){return [w.widget_id,w.title,w.submissions];}));
+    fill("geo-table",["Country","Count"],st.by_country.map(function(c){return [c.country,c.count];}));
+    fill("subs",["When","Widget","Data","Geo"],subs.items.map(function(s){return [s.created_at,s.widget_id,JSON.stringify(s.data),[s.city,s.country,s.geo_provider].filter(Boolean).join(", ")];}));
+  }catch(e){ err.textContent=e.message; }
+};
+</script>
+</body>
+</html>

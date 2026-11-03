@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Customer site (second origin)</title>
+  <style>body{font:16px/1.5 system-ui,sans-serif;max-width:640px;margin:40px auto;padding:0 16px}code{background:#f2f2f7;padding:2px 5px;border-radius:4px}</style>
+</head>
+<body>
+  <h1>Acme Coffee Roasters</h1>
+  <p>This page is served from <code>http://localhost:5500</code>; the widget platform lives on
+     <code>http://localhost:8000</code>. Different origin, so everything below crosses CORS.</p>
+
+  <h2>Newsletter</h2>
+  <!-- The ONE line a customer pastes: -->
+  <script src="http://localhost:8000/widget.js?id=demo-signup" async></script>
+
+  <h2>Contact</h2>
+  <script src="http://localhost:8000/widget.js?id=demo-contact" async></script>
+
+  <!-- Popover widget: appears after 3 seconds -->
+  <script src="http://localhost:8000/widget.js?id=demo-popover" async></script>
+  <p><a href="dashboard.html">Owner dashboard</a></p>
+</body>
+</html>
