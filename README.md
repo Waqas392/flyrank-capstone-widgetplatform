@@ -51,7 +51,7 @@ Start-Process -NoNewWindow python -ArgumentList "-m","http.server","5500","--dir
 python -m scripts.seed
 ```
 Open `http://localhost:5500`. The API is at `http://localhost:8000`. Keep the two server processes running while testing.
-Tests (no Docker/network; SQLite + mock geo): `python -m pytest -q` · Acceptance probes against a live server: `python -m scripts.run_probes`
+Tests (no Docker/network; SQLite + mock geo): `python -m pytest -q` · Acceptance probes against a live server: `python -m scripts.run_probes` · Live end-to-end suite against the running Docker stack (Windows): `run_tests.bat`
 
 ## API
 | | Endpoint | Notes |
@@ -87,5 +87,5 @@ Layered architecture ✔ · validation at the boundary ✔ · background job (re
 * No geo-result caching, deliberately - it would hide provider A/B behaviour during the fallback proofs. Live providers are rate-limited (ip-api 45/min); `GEO_MODE=live` skips private IPs, so localhost submissions get no geo.
 * Config edits take up to ~60 s to reach browsers (max-age) - the price of caching.
 * Webhooks are a non-goal (see `docs/DESIGN.md`). Deleting a widget cascades to its submissions.
-* The Postgres path (`docker compose`) uses portable SQL and the same code, but the automated tests run on SQLite.
-* `DEBUG_ENDPOINTS=1` is on in the demo compose file so probes can inject faults - **never enable it in production.**
+* The unit tests (`pytest`) run on SQLite. The live end-to-end suite (`run_tests.bat`: 182 pass, 1 documented skip, see `docs/live-test-report.md`) runs against the real `docker compose` stack with PostgreSQL.
+* **Dev defaults are not production settings.** `DEBUG_ENDPOINTS=1` is on in the demo compose file so probes can inject faults, and `SECRET_KEY` falls back to a placeholder (`dev-only-change-me`). In production: set `DEBUG_ENDPOINTS=0`, set a long random `SECRET_KEY` (it keys the visitor-IP hash), and remove the seeded demo account (`demo@example.com`).
