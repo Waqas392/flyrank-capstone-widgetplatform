@@ -51,6 +51,7 @@ Start-Process -NoNewWindow python -ArgumentList "-m","http.server","5500","--dir
 python -m scripts.seed
 ```
 Open `http://localhost:5500`. The API is at `http://localhost:8000`. Keep the two server processes running while testing.
+
 Tests (no Docker/network; SQLite + mock geo): `python -m pytest -q` · Acceptance probes against a live server: `python -m scripts.run_probes` · Live end-to-end suite against the running Docker stack (Windows): `run_tests.bat`
 
 ## API

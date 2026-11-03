@@ -91,7 +91,7 @@ The final verified result is:
 182 passed, 0 failed, 1 skipped
 ```
 
-This represents 178 live checks in total, including the skipped check.
+This represents 183 live checks in total, including the skipped check.
 
 The skipped check concerns conditional ETag handling for versioned assets, which is documented in the known limitations section.
 
